@@ -1,0 +1,28 @@
+local rem = game.ReplicatedStorage:WaitForChild("Server")
+local rem2 = game.ReplicatedStorage:WaitForChild("Client")
+local TextService = game:GetService("TextService")
+local textbox = game.Workspace:WaitForChild("Part").SurfaceGui.TextBox
+local player = game.Players.LocalPlayer
+local userid = player.UserId
+local filter1 = game.ReplicatedStorage:WaitForChild("FilterServer")
+local filter2 = game.ReplicatedStorage:WaitForChild("FilterClient")
+local filter3 = game.ReplicatedStorage:WaitForChild("FilteredBAD")
+local earlymessage = ""
+local message = ""
+
+textbox.FocusLost:Connect(function(inputObj)
+	earlymessage = textbox.Text
+	print(userid)
+	tostring(earlymessage)
+	print(earlymessage)
+	filter1:FireServer(earlymessage)
+end)
+
+filter2.OnClientEvent:Connect(function(player, msg)
+	message = msg
+	rem2:FireServer(player, message)
+end)
+
+filter3.OnClientEvent:Connect(function(text)
+	textbox.Text = text
+end)
