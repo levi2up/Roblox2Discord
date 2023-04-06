@@ -1,0 +1,24 @@
+local http = game:GetService("HttpService")
+local cooldown = false
+local rem1 = game.ReplicatedStorage:WaitForChild("Server")
+local rem2 = game.ReplicatedStorage:WaitForChild("Client")
+
+script.Parent.Parent.Parent.Send.SendGui.TextButton.MouseButton1Click:Connect(function()
+	if cooldown == false then
+		rem1:FireAllClients()
+		print("client fired")
+	end
+end)
+
+rem2.OnServerEvent:Connect(function(player, message)
+	print(message)
+	local Data = {
+		["content"] = message
+	}
+	Data = http:JSONEncode(Data)
+	print(Data)
+	http:PostAsync("https://webhook.lewisakura.moe/api/webhooks/insertwebhookhere", Data)
+	cooldown = true
+	wait(2)
+	cooldown = false
+end)
