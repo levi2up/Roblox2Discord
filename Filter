@@ -1,0 +1,22 @@
+local rem = game.ReplicatedStorage:WaitForChild("FilterServer")
+local rem2 = game.ReplicatedStorage:WaitForChild("FilterClient")
+local rem3 = game.ReplicatedStorage:WaitForChild("FilteredBAD")
+local TextService = game:GetService("TextService")
+local finalmessage = ""
+local cooldown = false
+
+rem.OnServerEvent:Connect(function(player, startmessage)
+	if cooldown == false then
+		local success, errorMessage = pcall(function()
+			tostring(startmessage)
+			local userid = player.UserId
+			finalmessage = TextService:FilterStringAsync(tostring(startmessage), userid):GetNonChatStringForBroadcastAsync()
+			rem3:FireClient(player, finalmessage)
+			rem2:FireClient(player, finalmessage)
+		end)
+		if not success then
+			warn("Error filtering text:", errorMessage)
+			rem2:FireClient(player)
+		end
+	end
+end)
